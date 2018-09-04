@@ -1,4 +1,5 @@
 var codemirror = require('codemirror');
+var stableStringify = require('json-stable-stringify');
 
 global.jsonlint = require('jsonlint/web/jsonlint.js');
 
@@ -43,10 +44,10 @@ export default function maJsonField() {
                 input.setAttribute(name, attributes[name]);
             }
 
-            scope.manuallyEnteredValueJSON = angular.toJson(scope.value);
+            scope.manuallyEnteredValueJSON = stableStringify(scope.value);
 
             scope.$watch('value', function (value) {
-                if(angular.toJson(value) === scope.manuallyEnteredValueJSON) {
+                if(stableStringify(value) === scope.manuallyEnteredValueJSON) {
                     return;
                 }
                 scope.jsonValue = value === null ? '' : angular.toJson(value, true);
@@ -55,13 +56,13 @@ export default function maJsonField() {
             scope.onValueChanged = function() {
                 var jsonValue = scope.jsonValue;
                 if (jsonValue == '' || typeof jsonValue === 'undefined') {
-                    scope.manuallyEnteredValueJSON = angular.toJson(null);
+                    scope.manuallyEnteredValueJSON = stableStringify(null);
                     scope.value = null;
                     return;
                 }
                 try {
                     var value = angular.fromJson(jsonValue);
-                    scope.manuallyEnteredValueJSON = angular.toJson(value);
+                    scope.manuallyEnteredValueJSON = stableStringify(value);
                     scope.value = value;
                 } catch (e) {
                     // incorrect JSON, do not convert back to value
