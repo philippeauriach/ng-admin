@@ -42,6 +42,9 @@ export default function maJsonField() {
             for (var name in attributes) {
                 input.setAttribute(name, attributes[name]);
             }
+            scope.$watch('value', function (value) {
+                scope.jsonValue = value === null ? '' : angular.toJson(value, true);
+            }, true);
             scope.$watch('jsonValue', function(jsonValue) {
                 if (jsonValue == '' || typeof jsonValue === 'undefined') {
                     scope.value = null;
