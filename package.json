@@ -28,6 +28,7 @@
     "es6-promise": "^2.3.0",
     "font-awesome": "^4.3.0",
     "humane-js": "^3.2.2",
+    "json-stable-stringify": "^1.0.1",
     "jsonlint": "^1.6.2",
     "lodash.debounce": "4.0.8",
     "ng-file-upload": "^7.0.12",
