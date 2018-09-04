@@ -42,25 +42,34 @@ export default function maJsonField() {
             for (var name in attributes) {
                 input.setAttribute(name, attributes[name]);
             }
+
+            scope.manuallyEnteredValueJSON = angular.toJson(scope.value);
+
             scope.$watch('value', function (value) {
+                if(angular.toJson(value) === scope.manuallyEnteredValueJSON) {
+                    return;
+                }
                 scope.jsonValue = value === null ? '' : angular.toJson(value, true);
             }, true);
-            scope.$watch('jsonValue', function(jsonValue) {
+            
+            scope.onValueChanged = function() {
+                var jsonValue = scope.jsonValue;
                 if (jsonValue == '' || typeof jsonValue === 'undefined') {
+                    scope.manuallyEnteredValueJSON = angular.toJson(null);
                     scope.value = null;
-
                     return;
                 }
                 try {
                     var value = angular.fromJson(jsonValue);
+                    scope.manuallyEnteredValueJSON = angular.toJson(value);
                     scope.value = value;
                 } catch (e) {
                     // incorrect JSON, do not convert back to value
                 }
-            });
+            }
         },
         template:
-'<textarea ui-codemirror ng-model="jsonValue" id="{{ name }}" name="{{ name }}" ng-required="v.required" ma-json-validator>' +
+'<textarea ui-codemirror ng-change="onValueChanged()" ng-model="jsonValue" id="{{ name }}" name="{{ name }}" ng-required="v.required" ma-json-validator>' +
 '</textarea>'
     };
 }
